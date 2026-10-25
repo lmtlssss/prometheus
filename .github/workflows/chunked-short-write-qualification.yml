@@ -17,6 +17,6 @@ jobs:
           go-version-file: go.mod
           cache: true
       - name: Check source formatting
-        run: test -z "$(gofmt -l storage/remote/chunked.go storage/remote/chunked_short_write_test.go)"
+        run: gofmt -d storage/remote/chunked.go storage/remote/chunked_short_write_test.go
       - name: Run targeted framing tests
         run: go test -count=1 -run 'TestChunkedWriterRejectsShortFrameWrites|TestChunkedWriterFullFrameStillRoundTrips|TestChunkedReader' ./storage/remote
