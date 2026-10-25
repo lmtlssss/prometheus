@@ -11,9 +11,9 @@ import (
 // shortFrameWriter deliberately violates io.Writer's short-write contract.
 // The codec must fail closed rather than report success for an incomplete frame.
 type shortFrameWriter struct {
-	dest bytes.Buffer
+	dest    bytes.Buffer
 	shortAt int
-	calls int
+	calls   int
 }
 
 func (w *shortFrameWriter) Write(p []byte) (int, error) {
@@ -28,7 +28,10 @@ func (w *shortFrameWriter) Write(p []byte) (int, error) {
 }
 
 func TestChunkedWriterRejectsShortFrameWrites(t *testing.T) {
-	for _, tc := range []struct{name string; call int}{
+	for _, tc := range []struct {
+		name string
+		call int
+	}{
 		{"length-delimiter", 1},
 		{"checksum", 2},
 		{"payload", 3},
