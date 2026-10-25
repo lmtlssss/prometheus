@@ -82,8 +82,12 @@ func (w *ChunkedWriter) Write(b []byte) (int, error) {
 		return 0, err
 	}
 
-	if err := binary.Write(w.writer, binary.BigEndian, w.crc32.Sum32()); err != nil {
+	var checksum [4]byte
+	binary.BigEndian.PutUint32(checksum[:], w.crc32.Sum32())
+	if n, err := w.writer.Write(checksum[:]); err != nil {
 		return 0, err
+	} else if n != len(checksum) {
+		return 0, io.ErrShortWrite
 	}
 
 	n, err := w.writer.Write(b)
