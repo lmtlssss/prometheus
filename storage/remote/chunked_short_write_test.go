@@ -30,6 +30,7 @@ func (w *shortFrameWriter) Write(p []byte) (int, error) {
 func TestChunkedWriterRejectsShortFrameWrites(t *testing.T) {
 	for _, tc := range []struct{name string; call int}{
 		{"length-delimiter", 1},
+		{"checksum", 2},
 		{"payload", 3},
 	} {
 		t.Run(tc.name, func(t *testing.T) {
@@ -37,9 +38,9 @@ func TestChunkedWriterRejectsShortFrameWrites(t *testing.T) {
 			cw := NewChunkedWriter(w, &mockedFlusher{})
 			n, err := cw.Write([]byte("hello"))
 			require.ErrorIs(t, err, io.ErrShortWrite)
-			if tc.call == 1 {
+			if tc.call < 3 {
 				require.Zero(t, n)
-				require.Equal(t, 1, w.calls)
+				require.Equal(t, tc.call, w.calls)
 			} else {
 				require.Equal(t, 4, n)
 				require.Equal(t, 3, w.calls)
