@@ -127,10 +127,10 @@ const Status: FC<StatusProps> = ({ agentMode, setAnimateLogo }) => {
   }, []);
 
   useEffect(() => {
-    if (setAnimateLogo && inputText != '') {
+    if (setAnimateLogo && inputText !== '') {
       setAnimateLogo(inputText.toUpperCase() === 'QSPN');
     }
-  }, [inputText]);
+  }, [inputText, setAnimateLogo]);
 
   /*    _
    *   /' \
